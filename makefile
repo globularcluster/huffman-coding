@@ -21,6 +21,7 @@ $(EXECUTABLE): $(OBJ_FILES)
 	g++ $(LD_FLAGS) -o $@ $^
 
 obj/%.o: src/%.cpp
+	@mkdir -p obj
 	g++ $(CC_FLAGS) -c -o $@ $<
 
 # Limpa .obj's e exec. Execute com: make clean
