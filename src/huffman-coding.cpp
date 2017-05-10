@@ -6,7 +6,7 @@ using namespace std;
 int main() {
 
   string entrada = "AAAAABBCCCEFF";
-  unordered_map<char, int> probOfChars;
+  unordered_map<char, double> probOfChars;
 
   calcProb(probOfChars, entrada);
   printProb(probOfChars);
