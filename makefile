@@ -13,7 +13,7 @@ EXECUTABLE:= huffman-coding
 CPP_FILES := $(wildcard $(SRCDIR)/*.cpp)
 OBJ_FILES := $(addprefix $(OBJDIR)/,$(notdir $(CPP_FILES:.cpp=.o)))
 LD_FLAGS :=
-CC_FLAGS := -std=c++11 -Wall -I $(HDRDIR)
+CC_FLAGS := -g -std=c++11 -Wall -I $(HDRDIR)
 
 all: $(EXECUTABLE)
 
@@ -27,3 +27,6 @@ obj/%.o: src/%.cpp
 # Limpa .obj's e exec. Execute com: make clean
 clean:
 	rm -f  $(OBJDIR)/*.o $(EXECUTABLE)
+
+run: clean all
+	./huffman-coding
