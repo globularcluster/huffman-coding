@@ -8,14 +8,13 @@ void calcProb(unordered_map<char, double> &probMap, string str) {
 
   // Maneira bem elegante de fazer uma contagem em Map
   for (char &c : str) {
-    //probMap[c]++;
-    probMap[c]+= 100.0/str.length();
+    probMap[c] += 100.0 / (double)str.length();
   }
 
   return;
 }
 
-void printProb(unordered_map<char, double> &probMap) {
+void printMap(unordered_map<char, double> &probMap) {
 
   unordered_map<char, double>::iterator p;
   for (auto &p : probMap)

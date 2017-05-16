@@ -6,7 +6,7 @@
 
 using namespace std;
 
-BTree::BTree(){};
+BTree::BTree() { this->root = new node(); };
 
 BTree::BTree(double prob, char c) {
   this->root = new node(prob, c);
@@ -15,10 +15,10 @@ BTree::BTree(double prob, char c) {
 }
 
 BTree::BTree(BTree *direita, BTree *esquerda) {
+  this->root = new node(esquerda->root->prob + direita->root->prob,
+                        esquerda->root->charac + direita->root->charac);
   this->root->right = direita->root;
   this->root->left = esquerda->root;
-  this->root->prob = esquerda->root->prob + direita->root->prob;
-  this->root->charac = esquerda->root->charac + direita->root->charac;
 }
 
 void BTree::_addNodeHelper(node *root, double val, char c) {
@@ -49,7 +49,7 @@ void BTree::addNode(BTree *node) {
   if (this->root)
     this->_addNodeHelper(node->root, node->root->prob, node->root->charac);
   else
-    this->root = new struct node(node->root->prob, node->root->charac);
+    this->root = node->root;
 }
 
 void BTree::printTree(node *p, int indent) {
@@ -92,3 +92,5 @@ void BTree::printTree(node *p, int indent) {
 }
 
 node *BTree::getRoot() { return this->root; }
+double BTree::getProb() { return this->root->prob; }
+char BTree::getChar() { return this->root->charac; }

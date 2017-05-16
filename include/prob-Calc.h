@@ -6,6 +6,6 @@
 using namespace std;
 
 void calcProb(unordered_map<char, double> &probMap, string str);
-void printProb(unordered_map<char, double> &probMap);
+void printMap(unordered_map<char, double> &probMap);
 
 #endif

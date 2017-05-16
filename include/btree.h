@@ -12,10 +12,9 @@ struct node {
   node *left;
   node *right;
 
-  node(double val, char c) {
+  node(double val = 0, char c = 0) {
     this->prob = val;
     this->charac = c;
-    this->charac = 0;
     this->left = NULL;
     this->right = NULL;
   }
@@ -35,6 +34,8 @@ public:
   void addNode(BTree *node);
   node *getNode(double val);
   node *getRoot();
+  double getProb();
+  char getChar();
   void printTree(node *p, int indent = 0);
 };
 

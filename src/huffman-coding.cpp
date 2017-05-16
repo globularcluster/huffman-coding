@@ -7,7 +7,7 @@
 
 using namespace std;
 
-char getLowestProb(unordered_map<char, double> map, double d);
+BTree *getLowestProb(vector<BTree *> &fila);
 
 int main() {
 
@@ -15,78 +15,60 @@ int main() {
   unordered_map<char, double> probOfChars;
 
   calcProb(probOfChars, entrada);
-  printProb(probOfChars);
+  // printProb(probOfChars);
 
-  // vetor para pegar valores (probabilidades) e
-  vector<double> values;
-  values.reserve(probOfChars.size());
-  for (auto v : probOfChars) {
-    values.push_back(v.second);
+  vector<BTree *> filaDePrioridades;
+  for (auto n : probOfChars) {
+    BTree *folha = new BTree(n.second, n.first);
+    filaDePrioridades.push_back(folha);
   }
-
-  BTree *tree = new BTree();
-
-  // insere todos valores na árvore
-  for (auto i : values) {
-    // tree->addNode(i);
-    cout << i << "\t - ";
-  }
-  cout << "\n";
-
-  // a árvore é visualmente vista da esquerda pra direita
-  // invés de cima para baixo
-  // tree->printTree(tree->getRoot());
-
-  // ordena com parâmetro default: crescente
-  sort(values.begin(), values.end(), greater<int>());
-
-  cout << "[debug] sort: \n";
-  for (auto i : values)
-    cout << i << "\t - ";
-  cout << "\n";
-
-  BTree *tree2 = new BTree();
 
   // ALGORITMO PARA GERAR A ÁRVORE
-  while (values.size()) {
-    double p1, p2;
-    char c1, c2;
+  while (filaDePrioridades.size() > 1) {
 
-    p1 = values.back();
-    c1 = getLowestProb(probOfChars, p1);
-    values.pop_back(); // remove menor probabilidade
-
-    p2 = values.back();
-    c2 = getLowestProb(probOfChars, p2);
-    values.pop_back();
-
-    BTree *sDir = new BTree(p1, c1);
-    BTree *sEsq = new BTree(p2, c2);
+    BTree *folha1 = getLowestProb(filaDePrioridades);
+    BTree *folha2 = getLowestProb(filaDePrioridades);
 
     // cria novo node com com a soma das duas menores probabilidades
     // e os adicionam como filhos
-    BTree *newNode = new BTree(sDir, sEsq);
+    BTree *newNode = new BTree(folha1, folha2);
 
-    tree2->addNode(newNode);
-
-    // adiciona nova soma de probabilidade na fila
-    values.push_back(newNode->getRoot()->prob);
-    sort(values.begin(), values.end(), greater<int>());
+    // adiciona nova probabilidade na fila
+    filaDePrioridades.push_back(newNode);
   }
 
-  tree2->printTree(tree2->getRoot());
+  cout << "\nok";
+
+  BTree *tree = filaDePrioridades[0];
 
   return 0;
 }
 
-char getLowestProb(unordered_map<char, double> map, double d) {
+// retorna folha com menor probabilidade e
+// já a deleta da fila!
+BTree *getLowestProb(vector<BTree *> &fila) {
 
-  // busca char correspondente da probabilidade
-  for (auto i : map) {
-    if (i.second == d)
-      return i.first;
+  double menorProb = fila.front()->getProb();
+  BTree *folhaMenorProb = fila.front();
+
+  // busca node com menor probabilidade
+  for (auto i : fila) {
+    if (i->getProb() < menorProb) {
+      menorProb = i->getProb();
+      folhaMenorProb = i;
+    }
   }
 
-  cout << "char não encontrado\n";
-  return 0;
+  // deleta o respectivo node da fila
+  // esse for feio é porque preciso pegar o indice do vetor
+  for (vector<BTree *>::size_type i = 0; i != fila.size(); ++i) {
+    if (fila[i]->getProb() == folhaMenorProb->getProb() &&
+        fila[i]->getChar() == folhaMenorProb->getChar()) {
+
+      fila.erase(fila.begin() + i);
+
+      return folhaMenorProb;
+    }
+  }
+  return folhaMenorProb;
 }
