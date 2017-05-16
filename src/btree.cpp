@@ -15,8 +15,7 @@ BTree::BTree(double prob, char c) {
 }
 
 BTree::BTree(BTree *direita, BTree *esquerda) {
-  this->root = new node(esquerda->root->prob + direita->root->prob,
-                        esquerda->root->charac + direita->root->charac);
+  this->root = new node(esquerda->root->prob + direita->root->prob, 0);
   this->root->right = direita->root;
   this->root->left = esquerda->root;
 }
@@ -68,7 +67,11 @@ void BTree::printTree(node *p, int indent) {
   printf("\n");
   for (int i = COUNT; i < indent; i++)
     printf(" ");
-  printf("%.2f\n", p->prob);
+  printf("%.1f", p->prob);
+  if (p->charac != 0)
+    printf("(%c)\n", p->charac);
+  else
+    printf("\n");
 
   // Process left child
   printTree(p->left, indent);

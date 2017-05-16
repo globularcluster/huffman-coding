@@ -1,6 +1,7 @@
 #include "../include/btree.h"
 #include "../include/prob-Calc.h"
 #include <algorithm>
+#include <fstream>
 #include <iostream>
 #include <unordered_map>
 #include <vector>
@@ -8,14 +9,18 @@
 using namespace std;
 
 BTree *getLowestProb(vector<BTree *> &fila);
+void saveProbs(unordered_map<char, double> map);
 
 int main() {
 
   string entrada = "AAAAAAAAABBBBCCCDDDEEF";
+
   unordered_map<char, double> probOfChars;
 
   calcProb(probOfChars, entrada);
   // printProb(probOfChars);
+
+  saveProbs(probOfChars);
 
   vector<BTree *> filaDePrioridades;
   for (auto n : probOfChars) {
@@ -37,9 +42,9 @@ int main() {
     filaDePrioridades.push_back(newNode);
   }
 
-  cout << "\nok";
-
   BTree *tree = filaDePrioridades[0];
+
+  tree->printTree(tree->getRoot());
 
   return 0;
 }
@@ -71,4 +76,33 @@ BTree *getLowestProb(vector<BTree *> &fila) {
     }
   }
   return folhaMenorProb;
+}
+
+void saveProbs(unordered_map<char, double> map) {
+
+  ofstream outStream;
+  string fileName("output.txt");
+
+  outStream.open(fileName);
+
+  vector<double> values;
+  for (auto n : map)
+    values.push_back(n.second);
+
+  sort(values.begin(), values.end(), std::greater<int>());
+
+  for (auto it : values) {
+    for (auto iter : map) {
+      if (iter.second == it) {
+        outStream << iter.first << "\t" << iter.second << "\n";
+        map.erase(iter.first);
+        break;
+      }
+    }
+  }
+
+  outStream.close();
+  cout << "file \"" + fileName + "\" saved";
+
+  return;
 }
