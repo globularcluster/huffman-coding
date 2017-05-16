@@ -6,28 +6,51 @@
 
 using namespace std;
 
-void BTree::_addNodeHelper(node *root, double val) {
+BTree::BTree(){};
+
+BTree::BTree(double prob, char c) {
+  this->root = new node(prob, c);
+  this->root->prob = prob;
+  this->root->charac = c;
+}
+
+BTree::BTree(BTree *direita, BTree *esquerda) {
+  this->root->right = direita->root;
+  this->root->left = esquerda->root;
+  this->root->prob = esquerda->root->prob + direita->root->prob;
+  this->root->charac = esquerda->root->charac + direita->root->charac;
+}
+
+void BTree::_addNodeHelper(node *root, double val, char c) {
 
   if (root->prob > val) {
     if (!root->left)
-      root->left = new node(val);
+      root->left = new node(val, c);
     else
-      this->_addNodeHelper(root->left, val);
+      this->_addNodeHelper(root->left, val, c);
   } else {
     if (!root->right)
-      root->right = new node(val);
+      root->right = new node(val, c);
     else
-      this->_addNodeHelper(root->right, val);
+      this->_addNodeHelper(root->right, val, c);
   }
 };
 
-void BTree::addNode(double val) {
+void BTree::addNode(double val, char c) {
 
   if (this->root)
-    this->_addNodeHelper(this->root, val);
+    this->_addNodeHelper(this->root, val, c);
   else
-    this->root = new node(val);
+    this->root = new node(val, c);
 };
+
+void BTree::addNode(BTree *node) {
+
+  if (this->root)
+    this->_addNodeHelper(node->root, node->root->prob, node->root->charac);
+  else
+    this->root = new struct node(node->root->prob, node->root->charac);
+}
 
 void BTree::printTree(node *p, int indent) {
   // Base case
@@ -50,6 +73,7 @@ void BTree::printTree(node *p, int indent) {
   // Process left child
   printTree(p->left, indent);
 
+  // outra maneira de printar, aparentemente não funciona
   /* if (p != NULL) {
      if (p->right) {
        printTree(p->right, indent + 4);
