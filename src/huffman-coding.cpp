@@ -56,12 +56,15 @@ int main() {
   charCodMap = calcCodMap(probOfChars, tree);
 
   // maneiro
-  /*boost::dynamic_bitset<> db;
-  db.push_back(true);
-  db.push_back(0);
-  db.push_back(false);
-  db.push_back(true);
-  cout << db;*/
+  /* boost::dynamic_bitset<> db;
+   db.push_back(true);
+   cout << db << "\n";
+   db.resize(db.size() + 1);
+   cout << db << "\n";
+   db = db << 1;
+   cout << db << "\n";
+   boost::dynamic_bitset<> db2{1, 1};
+   db[0].flip();*/
 
   return 0;
 }
@@ -135,24 +138,27 @@ char_bit_t calcCodMap(char_doub_t chars, BTree *tree) {
   for (auto charac : c) {
     auto root = tree->getRoot();
 
+    // cout << charac << "\n";
+
     while (root->charac != charac) {
 
       if (root->left->auxChars.find(charac) != std::string::npos) {
-        cods[charac].push_back(true);
+        cods[charac].resize(cods[charac].size() + 1);
+        cods[charac] = cods[charac] << 1;
+        cods[charac][0].flip();
         root = root->left;
+        // cout << "\t" << cods[charac] << "\tleft\n";
       } else {
-        cods[charac].push_back(false);
+        cods[charac].resize(cods[charac].size() + 1);
+        cods[charac] = cods[charac] << 1;
         root = root->right;
+        // cout << "\t" << cods[charac] << "\tright\n";
       }
     }
   }
 
   for (auto c : cods) {
-    cout << "(";
-    cout << c.first;
-    cout << ", ";
-    cout << c.second;
-    cout << ")\n";
+    cout << "(" << c.first << ", " << c.second << ")\n";
   }
   return cods;
 }
