@@ -3,18 +3,21 @@
 
 // baseado em: https://gist.github.com/mgechev/5911348
 
+#include <boost/dynamic_bitset.hpp>
 #include <iostream>
 
 struct node {
 
   double prob;
   char charac;
+  std::string auxChars;
   node *left;
   node *right;
 
   node(double val = 0, char c = 0) {
     this->prob = val;
     this->charac = c;
+    this->auxChars.push_back(c);
     this->left = NULL;
     this->right = NULL;
   }
@@ -37,6 +40,7 @@ public:
   double getProb();
   char getChar();
   void printTree(node *p, int indent = 0);
+  boost::dynamic_bitset<> getCod(char c);
 };
 
 #endif

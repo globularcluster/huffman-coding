@@ -1,4 +1,5 @@
 #include "../include/btree.h"
+#include <boost/dynamic_bitset.hpp>
 #include <iomanip>
 #include <iostream>
 
@@ -16,6 +17,7 @@ BTree::BTree(double prob, char c) {
 
 BTree::BTree(BTree *direita, BTree *esquerda) {
   this->root = new node(esquerda->root->prob + direita->root->prob, 0);
+  this->root->auxChars = esquerda->root->auxChars + direita->root->auxChars;
   this->root->right = direita->root;
   this->root->left = esquerda->root;
 }
@@ -71,7 +73,7 @@ void BTree::printTree(node *p, int indent) {
   if (p->charac != 0)
     printf("(%c)\n", p->charac);
   else
-    printf("\n");
+    cout << "(" + p->auxChars + ")\n";
 
   // Process left child
   printTree(p->left, indent);
@@ -97,3 +99,9 @@ void BTree::printTree(node *p, int indent) {
 node *BTree::getRoot() { return this->root; }
 double BTree::getProb() { return this->root->prob; }
 char BTree::getChar() { return this->root->charac; }
+
+boost::dynamic_bitset<> getCod(char c) {
+  static boost::dynamic_bitset<> db;
+
+  return db;
+}

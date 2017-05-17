@@ -1,6 +1,8 @@
 #include "../include/btree.h"
 #include "../include/prob-Calc.h"
 #include <algorithm>
+#include <bitset>
+#include <boost/dynamic_bitset.hpp>
 #include <fstream>
 #include <iostream>
 #include <unordered_map>
@@ -8,17 +10,21 @@
 
 using namespace std;
 
+typedef unordered_map<char, boost::dynamic_bitset<>> char_bit_t;
+typedef unordered_map<char, double> char_doub_t;
+
 BTree *getLowestProb(vector<BTree *> &fila);
-void saveProbs(unordered_map<char, double> map);
+void saveProbs(char_doub_t map);
+char_bit_t calcCodMap(char_doub_t chars, BTree *tree);
 
 int main() {
 
   string entrada = "AAAAAAAAABBBBCCCDDDEEF";
 
-  unordered_map<char, double> probOfChars;
+  char_doub_t probOfChars;
 
   calcProb(probOfChars, entrada);
-  // printProb(probOfChars);
+  printMap(probOfChars);
 
   saveProbs(probOfChars);
 
@@ -45,6 +51,17 @@ int main() {
   BTree *tree = filaDePrioridades[0];
 
   tree->printTree(tree->getRoot());
+
+  char_bit_t charCodMap;
+  charCodMap = calcCodMap(probOfChars, tree);
+
+  // maneiro
+  /*boost::dynamic_bitset<> db;
+  db.push_back(true);
+  db.push_back(0);
+  db.push_back(false);
+  db.push_back(true);
+  cout << db;*/
 
   return 0;
 }
@@ -78,7 +95,7 @@ BTree *getLowestProb(vector<BTree *> &fila) {
   return folhaMenorProb;
 }
 
-void saveProbs(unordered_map<char, double> map) {
+void saveProbs(char_doub_t map) {
 
   ofstream outStream;
   string fileName("output.txt");
@@ -102,7 +119,40 @@ void saveProbs(unordered_map<char, double> map) {
   }
 
   outStream.close();
-  cout << "file \"" + fileName + "\" saved";
+  cout << "file \"" + fileName + "\" saved\n";
 
   return;
+}
+
+char_bit_t calcCodMap(char_doub_t chars, BTree *tree) {
+
+  char_bit_t cods;
+
+  vector<char> c;
+  for (auto i : chars)
+    c.push_back(i.first);
+
+  for (auto charac : c) {
+    auto root = tree->getRoot();
+
+    while (root->charac != charac) {
+
+      if (root->left->auxChars.find(charac) != std::string::npos) {
+        cods[charac].push_back(true);
+        root = root->left;
+      } else {
+        cods[charac].push_back(false);
+        root = root->right;
+      }
+    }
+  }
+
+  for (auto c : cods) {
+    cout << "(";
+    cout << c.first;
+    cout << ", ";
+    cout << c.second;
+    cout << ")\n";
+  }
+  return cods;
 }
