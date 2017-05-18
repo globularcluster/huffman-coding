@@ -17,6 +17,7 @@ BTree *getLowestProb(vector<BTree *> &fila);
 void saveProbs(char_doub_t map);
 char_bit_t calcCodMap(char_doub_t chars, BTree *tree);
 void exportOriginalToBinFile(string str);
+void exportCodedToBinFile(string str, char_bit_t codes);
 
 int main() {
 
@@ -25,7 +26,7 @@ int main() {
   char_doub_t probOfChars;
 
   calcProb(probOfChars, entrada);
-  printMap(probOfChars);
+  // printMap(probOfChars);
 
   saveProbs(probOfChars);
 
@@ -49,25 +50,14 @@ int main() {
     filaDePrioridades.push_back(newNode);
   }
 
-  BTree *tree = filaDePrioridades[0];
-
-  tree->printTree(tree->getRoot());
+  BTree *huffmanTree = filaDePrioridades[0];
+  // tree->printTree(tree->getRoot());
 
   char_bit_t charCodMap;
-  charCodMap = calcCodMap(probOfChars, tree);
+  charCodMap = calcCodMap(probOfChars, huffmanTree);
+
   exportOriginalToBinFile(entrada);
-
-
-  // maneiro
-  /* boost::dynamic_bitset<> db;
-   db.push_back(true);
-   cout << db << "\n";
-   db.resize(db.size() + 1);
-   cout << db << "\n";
-   db = db << 1;
-   cout << db << "\n";
-   boost::dynamic_bitset<> db2{1, 1};
-   db[0].flip();*/
+  exportCodedToBinFile(entrada, charCodMap);
 
   return 0;
 }
@@ -104,7 +94,7 @@ BTree *getLowestProb(vector<BTree *> &fila) {
 void saveProbs(char_doub_t map) {
 
   ofstream outStream;
-  string fileName("output.txt");
+  string fileName("probabilidades.txt");
 
   outStream.open(fileName);
 
@@ -160,22 +150,33 @@ char_bit_t calcCodMap(char_doub_t chars, BTree *tree) {
     }
   }
 
-  for (auto c : cods) {
-    cout << "(" << c.first << ", " << c.second << ")\n";
-  }
+  /* for (auto c : cods) {
+     cout << "(" << c.first << ", " << c.second << ")\n";
+   }*/
   return cods;
 }
 
-void exportOriginalToBinFile(string str){
-  ofstream outfile("textoOriginalBin.txt", ofstream::binary);
-  for (int i = 0; i < str.length(); i++)
-    {
-        outfile << std::bitset<8>((int)str[i]);
-    }
+void exportOriginalToBinFile(string str) {
+  ofstream outfile("textoOriginal.bin", ofstream::binary);
+  for (unsigned i = 0; i < str.length(); i++) {
+    outfile << std::bitset<8>((int)str[i]);
+  }
 
+  cout << "original message saved in binary. \n";
+}
 
+void exportCodedToBinFile(string str, char_bit_t codes) {
+  string file = "textoCodificado.bin";
 
-cout << "file saved\n";
+  ofstream myFile(file, ios::out | ios::binary);
 
+  for (auto i : str) {
+    myFile << codes[i];
+  }
 
+  myFile.close();
+
+  cout << "coded message saved in binary. \n";
+
+  return;
 }
