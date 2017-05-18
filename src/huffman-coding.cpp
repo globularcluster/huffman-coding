@@ -18,7 +18,9 @@ typedef unordered_map<char, double> char_doub_t;
 
 int main(int argc, char *argv[]) {
 
-  string entrada = "AAAAAAAAABBBBCCCDDDEEF";
+//Lê arquivo de entrada por linha de comando
+  string entrada = argv[1];
+
 
   char_doub_t probOfChars;
 
