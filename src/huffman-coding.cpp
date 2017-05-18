@@ -1,4 +1,6 @@
 #include "../include/btree.h"
+#include "../include/compress.h"
+#include "../include/decompress.h"
 #include "../include/prob-Calc.h"
 #include <algorithm>
 #include <bitset>
@@ -15,11 +17,10 @@ typedef unordered_map<char, double> char_doub_t;
 
 BTree *getLowestProb(vector<BTree *> &fila);
 void saveProbs(char_doub_t map);
-char_bit_t calcCodMap(char_doub_t chars, BTree *tree);
 void exportOriginalToBinFile(string str);
 void exportCodedToBinFile(string str, char_bit_t codes);
 
-int main() {
+int main(int argc, char *argv[]) {
 
   string entrada = "AAAAAAAAABBBBCCCDDDEEF";
 
@@ -94,7 +95,7 @@ BTree *getLowestProb(vector<BTree *> &fila) {
 void saveProbs(char_doub_t map) {
 
   ofstream outStream;
-  string fileName("probabilidades.txt");
+  string fileName("output/probabilidades.txt");
 
   outStream.open(fileName);
 
@@ -120,44 +121,8 @@ void saveProbs(char_doub_t map) {
   return;
 }
 
-char_bit_t calcCodMap(char_doub_t chars, BTree *tree) {
-
-  char_bit_t cods;
-
-  vector<char> c;
-  for (auto i : chars)
-    c.push_back(i.first);
-
-  for (auto charac : c) {
-    auto root = tree->getRoot();
-
-    // cout << charac << "\n";
-
-    while (root->charac != charac) {
-
-      if (root->left->auxChars.find(charac) != std::string::npos) {
-        cods[charac].resize(cods[charac].size() + 1);
-        cods[charac] = cods[charac] << 1;
-        cods[charac][0].flip();
-        root = root->left;
-        // cout << "\t" << cods[charac] << "\tleft\n";
-      } else {
-        cods[charac].resize(cods[charac].size() + 1);
-        cods[charac] = cods[charac] << 1;
-        root = root->right;
-        // cout << "\t" << cods[charac] << "\tright\n";
-      }
-    }
-  }
-
-  /* for (auto c : cods) {
-     cout << "(" << c.first << ", " << c.second << ")\n";
-   }*/
-  return cods;
-}
-
 void exportOriginalToBinFile(string str) {
-  ofstream outfile("textoOriginal.bin", ofstream::binary);
+  ofstream outfile("output/textoOriginal.bin", ofstream::binary);
   for (unsigned i = 0; i < str.length(); i++) {
     outfile << std::bitset<8>((int)str[i]);
   }
@@ -166,7 +131,7 @@ void exportOriginalToBinFile(string str) {
 }
 
 void exportCodedToBinFile(string str, char_bit_t codes) {
-  string file = "textoCodificado.bin";
+  string file = "output/textoCodificado.bin";
 
   ofstream myFile(file, ios::out | ios::binary);
 

@@ -22,11 +22,12 @@ $(EXECUTABLE): $(OBJ_FILES)
 
 obj/%.o: src/%.cpp
 	@mkdir -p obj
+	@mkdir -p output
 	g++ $(CC_FLAGS) -c -o $@ $<
 
 # Limpa .obj's e exec. Execute com: make clean
 clean:
-	rm -f  $(OBJDIR)/*.o $(EXECUTABLE)
+	rm -f  $(OBJDIR)/*.o $(EXECUTABLE) ./output/*
 
 run: clean all
 	./huffman-coding
