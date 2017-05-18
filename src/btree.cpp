@@ -77,23 +77,6 @@ void BTree::printTree(node *p, int indent) {
 
   // Process left child
   printTree(p->left, indent);
-
-  // outra maneira de printar, aparentemente não funciona
-  /* if (p != NULL) {
-     if (p->right) {
-       printTree(p->right, indent + 4);
-     }
-     if (indent) {
-       std::cout << std::setw(indent) << ' ';
-     }
-     if (p->right)
-       std::cout << " /\n" << std::setw(indent) << ' ';
-     std::cout << p->prob << "\n ";
-     if (p->left) {
-       std::cout << std::setw(indent) << ' ' << " \\\n";
-       printTree(p->left, indent + 4);
-     }
-   }*/
 }
 
 node *BTree::getRoot() { return this->root; }
