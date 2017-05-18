@@ -15,5 +15,6 @@ BTree *getLowestProb(vector<BTree *> &fila);
 void saveProbs(char_doub_t map);
 void exportOriginalToBinFile(string str);
 void exportCodedToBinFile(string str, char_bit_t codes);
+char_bit_t calcCodMap(char_doub_t chars, BTree *tree);
 
 #endif

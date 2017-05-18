@@ -1,41 +1,48 @@
+#include "../include/util.h"
+#include "../include/btree.h"
 #include "../include/compress.h"
+#include "../include/decompress.h"
+#include "../include/prob-Calc.h"
 #include <iostream>
 #include <vector>
+#include <algorithm>
+#include <bitset>
+#include <boost/dynamic_bitset.hpp>
+#include <fstream>
+#include <iostream>
+#include <unordered_map>
+#include <vector>
+
+using namespace std;
 
 typedef std::unordered_map<char, boost::dynamic_bitset<>> char_bit_t;
 
-char_bit_t calcCodMap(char_doub_t chars, BTree *tree) {
+void huffmanCompress(string entrada){
 
-  char_bit_t cods;
 
-  std::vector<char> c;
-  for (auto i : chars)
-    c.push_back(i.first);
 
-  for (auto charac : c) {
-    auto root = tree->getRoot();
+    char_doub_t probOfChars;
+    calcProb(probOfChars, entrada);
+    // printMap(probOfChars);
 
-    // cout << charac << "\n";
+    saveProbs(probOfChars);
 
-    while (root->charac != charac) {
-
-      if (root->left->auxChars.find(charac) != std::string::npos) {
-        cods[charac].resize(cods[charac].size() + 1);
-        cods[charac] = cods[charac] << 1;
-        cods[charac][0].flip();
-        root = root->left;
-        // cout << "\t" << cods[charac] << "\tleft\n";
-      } else {
-        cods[charac].resize(cods[charac].size() + 1);
-        cods[charac] = cods[charac] << 1;
-        root = root->right;
-        // cout << "\t" << cods[charac] << "\tright\n";
-      }
+    vector<BTree *> filaDePrioridades;
+    for (auto n : probOfChars) {
+      BTree *folha = new BTree(n.second, n.first);
+      filaDePrioridades.push_back(folha);
     }
-  }
 
-  /* for (auto c : cods) {
-     cout << "(" << c.first << ", " << c.second << ")\n";
-   }*/
-  return cods;
+    // ALGORITMO PARA GERAR A ÁRVORE
+    generateHuffmanTree(filaDePrioridades);
+
+    BTree *huffmanTree = filaDePrioridades[0];
+    // huffmanTree->printTree(huffmanTree->getRoot());
+
+    char_bit_t charCodMap;
+    charCodMap = calcCodMap(probOfChars, huffmanTree);
+
+    exportOriginalToBinFile(entrada);
+    exportCodedToBinFile(entrada, charCodMap);
+
 }
