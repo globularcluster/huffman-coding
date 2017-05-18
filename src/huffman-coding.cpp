@@ -8,6 +8,7 @@
 #include <boost/dynamic_bitset.hpp>
 #include <fstream>
 #include <iostream>
+#include <string>
 #include <unordered_map>
 #include <vector>
 
@@ -45,7 +46,9 @@ int main(int argc, char *argv[]) {
   exportOriginalToBinFile(entrada);
   exportCodedToBinFile(entrada, charCodMap);
 
-  // decompress(charCodMap['F'], "probs.txt");
+  decompress(charCodMap['F'], "probs.txt");
+  if (argc > 1)
+    string s = argv[1];
 
   return 0;
 }
