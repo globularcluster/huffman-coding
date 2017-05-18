@@ -33,7 +33,7 @@ int main(int argc, char *argv[]) {
   case 3:
     entradaComprimida = argv[1];
     arquivoProbabilidades = argv[2];
-    // huffmanDecompress(entradaComprimida, arquivoProbabilidades);
+    decompress(entradaComprimida, arquivoProbabilidades);
     break;
 
   default:

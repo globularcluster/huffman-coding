@@ -10,9 +10,12 @@ using namespace std;
 typedef std::unordered_map<char, double> char_doub_t;
 typedef unordered_map<char, boost::dynamic_bitset<>> char_bit_t;
 
-void decompress(boost::dynamic_bitset<> compressed, std::string Filein) {
+void decompress(string compressedFile, string probabilidadesFile) {
 
-  char_doub_t charsProbs = getProbs(Filein);
+  char_doub_t charsProbs = getProbs(probabilidadesFile);
+  boost::dynamic_bitset<> compressed;
+
+  loadBitsFile(compressedFile, compressed);
 
   vector<BTree *> filaPrioridades;
   for (auto n : charsProbs) {
@@ -89,4 +92,17 @@ void exportDecodedToASCII(char_bit_t charCod,
   cout << s << endl;
 
   return;
+}
+
+void loadBitsFile(string str, boost::dynamic_bitset<> &db) {
+
+  ifstream fileIn(str, ios::binary | ios::in);
+
+  char c;
+  while (fileIn.get(c)) {
+    db.resize(db.size() + 1);
+    db = db << 1;
+    if (c == '1')
+      db[0].flip();
+  }
 }
