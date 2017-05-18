@@ -66,7 +66,6 @@ void exportDecodedToASCII(char_bit_t charCod,
                           boost::dynamic_bitset<> compressed) {
 
   string s;
-  char ch = 0;
   boost::dynamic_bitset<> charac;
 
   // para todo bit comprimido

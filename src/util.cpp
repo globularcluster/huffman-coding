@@ -30,7 +30,7 @@ void generateHuffmanTree(vector<BTree *> &fila) {
     // adiciona nova probabilidade na fila
     fila.push_back(newNode);
 
-    sort(fila.begin(), fila.end(), cmp();
+    sort(fila.begin(), fila.end());
 
     for (auto f : fila)
       cout << f->getRoot()->auxChars << "\t" << f->getRoot()->prob << endl;
