@@ -15,6 +15,7 @@ using namespace std;
 typedef unordered_map<char, boost::dynamic_bitset<>> char_bit_t;
 typedef unordered_map<char, double> char_doub_t;
 
+void generateHuffmanTree(vector<BTree *> &fila);
 BTree *getLowestProb(vector<BTree *> &fila);
 void saveProbs(char_doub_t map);
 void exportOriginalToBinFile(string str);
@@ -38,21 +39,10 @@ int main(int argc, char *argv[]) {
   }
 
   // ALGORITMO PARA GERAR A ÁRVORE
-  while (filaDePrioridades.size() > 1) {
-
-    BTree *folha1 = getLowestProb(filaDePrioridades);
-    BTree *folha2 = getLowestProb(filaDePrioridades);
-
-    // cria novo node com com a soma das duas menores probabilidades
-    // e os adicionam como filhos
-    BTree *newNode = new BTree(folha1, folha2);
-
-    // adiciona nova probabilidade na fila
-    filaDePrioridades.push_back(newNode);
-  }
+  generateHuffmanTree(filaDePrioridades);
 
   BTree *huffmanTree = filaDePrioridades[0];
-  // tree->printTree(tree->getRoot());
+  // huffmanTree->printTree(huffmanTree->getRoot());
 
   char_bit_t charCodMap;
   charCodMap = calcCodMap(probOfChars, huffmanTree);
@@ -61,6 +51,24 @@ int main(int argc, char *argv[]) {
   exportCodedToBinFile(entrada, charCodMap);
 
   return 0;
+}
+
+void generateHuffmanTree(vector<BTree *> &fila) {
+
+  while (fila.size() > 1) {
+
+    BTree *folha1 = getLowestProb(fila);
+    BTree *folha2 = getLowestProb(fila);
+
+    // cria novo node com com a soma das duas menores probabilidades
+    // e os adicionam como filhos
+    BTree *newNode = new BTree(folha1, folha2);
+
+    // adiciona nova probabilidade na fila
+    fila.push_back(newNode);
+  }
+
+  return;
 }
 
 // retorna folha com menor probabilidade e
