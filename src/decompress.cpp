@@ -23,8 +23,8 @@ void decompress(boost::dynamic_bitset<> compressed, std::string Filein) {
   generateHuffmanTree(filaPrioridades);
 
   BTree *huffTree = filaPrioridades[0];
-  // cout << "decompressed tree: " << endl;
-  // huffTree->printTree(huffTree->getRoot());
+  cout << "decompressed tree: " << endl;
+  huffTree->printTree(huffTree->getRoot());
 
   char_bit_t charCod;
   charCod = calcCodMap(charsProbs, huffTree);
@@ -63,14 +63,26 @@ void exportDecodedToASCII(char_bit_t charCod,
                           boost::dynamic_bitset<> compressed) {
 
   string s;
+  char ch = 0;
+  boost::dynamic_bitset<> charac;
 
-  for (unsigned i = 0; i < compressed.size(); ++i) {
-    char ch = ch + compressed[i];
+  // para todo bit comprimido
+  for (int i = compressed.size() - 1; i >= 0; --i) {
+
+    // aumenta um bit e shift pra esquerda
+    charac.resize(charac.size() + 1);
+    charac = charac << 1;
+
+    // se o bit comprimido lido for 1, bit menos significativo é setado.
+    if (compressed[i])
+      charac[0].flip();
+
+    // procura pelo char pelo seu respectivo bit codificado
     for (auto c : charCod) {
-      boost::dynamic_bitset<> db(ch);
-      if (c.second == db) {
+      // se achar, concatena char na string final
+      if (c.second == charac) {
         s += c.first;
-        ch = 0;
+        charac.resize(0); // e zera a parada loca
       }
     }
   }

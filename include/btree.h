@@ -21,6 +21,8 @@ struct node {
     this->left = NULL;
     this->right = NULL;
   }
+
+  bool operator<(const node &ch) const { return (prob < ch.prob); }
 };
 
 class BTree {

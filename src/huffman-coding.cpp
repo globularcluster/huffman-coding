@@ -19,10 +19,14 @@ typedef unordered_map<char, double> char_doub_t;
 
 int main(int argc, char *argv[]) {
 
-//Lê arquivo de entrada por linha de comando
-  string entrada = argv[1];
-
-
+  string entrada;
+  // Lê arquivo de entrada por linha de comando
+  if (argc > 1)
+    entrada = argv[1];
+  else {
+    cout << "informe a entrada!";
+    return 0;
+  }
   char_doub_t probOfChars;
 
   calcProb(probOfChars, entrada);
@@ -40,7 +44,7 @@ int main(int argc, char *argv[]) {
   generateHuffmanTree(filaDePrioridades);
 
   BTree *huffmanTree = filaDePrioridades[0];
-  // huffmanTree->printTree(huffmanTree->getRoot());
+  huffmanTree->printTree(huffmanTree->getRoot());
 
   char_bit_t charCodMap;
   charCodMap = calcCodMap(probOfChars, huffmanTree);
@@ -48,9 +52,10 @@ int main(int argc, char *argv[]) {
   exportOriginalToBinFile(entrada);
   exportCodedToBinFile(entrada, charCodMap);
 
-  decompress(charCodMap['F'], "probs.txt");
-  if (argc > 1)
-    string s = argv[1];
+  boost::dynamic_bitset<> db{4, 8};
+  cout << "db: " << db << endl;
+
+  decompress(db, "probs.txt");
 
   return 0;
 }
@@ -68,6 +73,8 @@ void generateHuffmanTree(vector<BTree *> &fila) {
 
     // adiciona nova probabilidade na fila
     fila.push_back(newNode);
+
+    sort(fila.begin(), fila.end());
   }
 
   return;
