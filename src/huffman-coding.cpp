@@ -16,6 +16,7 @@ typedef unordered_map<char, double> char_doub_t;
 BTree *getLowestProb(vector<BTree *> &fila);
 void saveProbs(char_doub_t map);
 char_bit_t calcCodMap(char_doub_t chars, BTree *tree);
+void exportOriginalToBinFile(string str);
 
 int main() {
 
@@ -54,6 +55,8 @@ int main() {
 
   char_bit_t charCodMap;
   charCodMap = calcCodMap(probOfChars, tree);
+  exportOriginalToBinFile(entrada);
+
 
   // maneiro
   /* boost::dynamic_bitset<> db;
@@ -161,4 +164,18 @@ char_bit_t calcCodMap(char_doub_t chars, BTree *tree) {
     cout << "(" << c.first << ", " << c.second << ")\n";
   }
   return cods;
+}
+
+void exportOriginalToBinFile(string str){
+  ofstream outfile("textoOriginalBin.txt", ofstream::binary);
+  for (int i = 0; i < str.length(); i++)
+    {
+        outfile << std::bitset<8>((int)str[i]);
+    }
+
+
+
+cout << "file saved\n";
+
+
 }
