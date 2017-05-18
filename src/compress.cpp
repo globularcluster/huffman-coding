@@ -1,10 +1,8 @@
-#include "../include/util.h"
-#include "../include/btree.h"
 #include "../include/compress.h"
+#include "../include/btree.h"
 #include "../include/decompress.h"
 #include "../include/prob-Calc.h"
-#include <iostream>
-#include <vector>
+#include "../include/util.h"
 #include <algorithm>
 #include <bitset>
 #include <boost/dynamic_bitset.hpp>
@@ -17,32 +15,29 @@ using namespace std;
 
 typedef std::unordered_map<char, boost::dynamic_bitset<>> char_bit_t;
 
-void huffmanCompress(string entrada){
+void huffmanCompress(string entrada) {
 
+  char_doub_t probOfChars;
+  calcProb(probOfChars, entrada);
+  // printMap(probOfChars);
 
+  saveProbs(probOfChars);
 
-    char_doub_t probOfChars;
-    calcProb(probOfChars, entrada);
-    // printMap(probOfChars);
+  vector<BTree *> filaDePrioridades;
+  for (auto n : probOfChars) {
+    BTree *folha = new BTree(n.second, n.first);
+    filaDePrioridades.push_back(folha);
+  }
 
-    saveProbs(probOfChars);
+  // ALGORITMO PARA GERAR A ÁRVORE
+  generateHuffmanTree(filaDePrioridades);
 
-    vector<BTree *> filaDePrioridades;
-    for (auto n : probOfChars) {
-      BTree *folha = new BTree(n.second, n.first);
-      filaDePrioridades.push_back(folha);
-    }
+  BTree *huffmanTree = filaDePrioridades[0];
+  // huffmanTree->printTree(huffmanTree->getRoot());
 
-    // ALGORITMO PARA GERAR A ÁRVORE
-    generateHuffmanTree(filaDePrioridades);
+  char_bit_t charCodMap;
+  charCodMap = calcCodMap(probOfChars, huffmanTree);
 
-    BTree *huffmanTree = filaDePrioridades[0];
-    // huffmanTree->printTree(huffmanTree->getRoot());
-
-    char_bit_t charCodMap;
-    charCodMap = calcCodMap(probOfChars, huffmanTree);
-
-    exportOriginalToBinFile(entrada);
-    exportCodedToBinFile(entrada, charCodMap);
-
+  exportOriginalToBinFile(entrada);
+  exportCodedToBinFile(entrada, charCodMap);
 }

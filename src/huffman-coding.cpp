@@ -1,8 +1,8 @@
-#include "../include/util.h"
 #include "../include/btree.h"
 #include "../include/compress.h"
 #include "../include/decompress.h"
 #include "../include/prob-Calc.h"
+#include "../include/util.h"
 #include <algorithm>
 #include <bitset>
 #include <boost/dynamic_bitset.hpp>
@@ -23,22 +23,22 @@ int main(int argc, char *argv[]) {
   string entradaComprimida;
   string arquivoProbabilidades;
 
-    switch(argc){
+  switch (argc) {
 
-    case 2:   entrada = argv[1];
-              huffmanCompress(entrada);
-              break;
+  case 2:
+    entrada = argv[1];
+    huffmanCompress(entrada);
+    break;
 
-    case 3:   entradaComprimida = argv[1];
-              arquivoProbabilidades = argv[2];
-              //huffmanDecompress(entradaComprimida, arquivoProbabilidades);
-              break;
+  case 3:
+    entradaComprimida = argv[1];
+    arquivoProbabilidades = argv[2];
+    // huffmanDecompress(entradaComprimida, arquivoProbabilidades);
+    break;
 
-    default: cout << "ENTRADA INVALIDA" << endl;
+  default:
+    cout << "ENTRADA INVALIDA" << endl;
   }
-
-
-
 
   return 0;
 }

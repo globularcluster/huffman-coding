@@ -9,6 +9,6 @@
 typedef std::unordered_map<char, boost::dynamic_bitset<>> char_bit_t;
 typedef std::unordered_map<char, double> char_doub_t;
 
-void huffmanCompress(string entrada);
+void huffmanCompress(std::string entrada);
 
 #endif

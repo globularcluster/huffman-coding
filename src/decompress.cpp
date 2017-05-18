@@ -1,7 +1,7 @@
 #include "../include/decompress.h"
 #include "../include/btree.h"
 #include "../include/compress.h"
-#include "../include/huffman-coding.h"
+#include "../include/util.h"
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
